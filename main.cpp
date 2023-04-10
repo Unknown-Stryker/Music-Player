@@ -6,14 +6,14 @@
 
 int main(void)
 {
-	IO::initialize_app();
+	io::initialize_app();
 
 	int l_input_result = 0;
 
 	while (amf::g_is_main_loop_active == true)
 	{
 		l_input_result = amf::get_message();
-		amf::interpret_input_code(l_input_result)->take_action();
+		amf::interpret_input_code(l_input_result)->execute();
 	}
 
 	return 0;

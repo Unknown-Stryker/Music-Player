@@ -14,37 +14,37 @@ namespace amf // app main framework
 	class action_base
 	{
 	public:
-		virtual void take_action() noexcept = 0;
+		virtual void execute() noexcept = 0;
 	};
 
 	class playing_action : public action_base
 	{
 	public:
-		virtual void take_action() noexcept override;
+		virtual void execute() noexcept override;
 	};
 
 	class adding_action : public action_base
 	{
 	public:
-		virtual void take_action() noexcept override;
+		virtual void execute() noexcept override;
 	};
 
 	class deleting_action : public action_base
 	{
 	public:
-		virtual void take_action() noexcept override;
+		virtual void execute() noexcept override;
 	};
 
 	class exit_action : public action_base
 	{
 	public:
-		virtual void take_action() noexcept override;
+		virtual void execute() noexcept override;
 	};
 
 	class idle_action : public action_base
 	{
 	public:
-		virtual void take_action() noexcept override;
+		virtual void execute() noexcept override;
 	};
 
 	action_base* interpret_input_code(const int input_p) noexcept;

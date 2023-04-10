@@ -1,22 +1,22 @@
 #include "application_initializer.hpp"
-#include "fstream_guard.hxx"
 #include "music_play_list.hpp"
-#include <source/private/runtime_exception.cpp>
-#include <source/private/parallel.mutex.cpp>
-#include <source/private/utility.clock.cpp>
+#include <Frogman-API-Lab/source/private/runtime_exception.cpp> // #including .cpp files will be replaced with a DLL or a static library in later versions.
+#include <Frogman-API-Lab/source/private/parallel.mutex.cpp>
+#include <Frogman-API-Lab/source/private/utility.clock.cpp> 
+#include <Frogman-API-Lab/source/include/public/FE.utility.fstream_guard.hxx>
 #include <fstream>
 #include <iostream>
 #include <cstring>
 
 
-void IO::initialize_app() noexcept
+void io::initialize_app() noexcept
 {
 	std::ifstream l_play_list_reader;
-	IO::fstream_guard<std::ifstream> l_play_list_reader_guard(l_play_list_reader, "my_music_play_list.playlist");
+	FE::ifstream_guard l_play_list_reader_guard(l_play_list_reader, "my_music_play_list.playlist");
 
 	if (l_play_list_reader_guard.is_open() == false)
 	{
-		char l_buffer = '\0';
+		FE::fstring<_FSTRING_LENGTH_>::char_t l_buffer = '\0';
 		do
 		{
 			std::cout << "Failed to load a music play list save file.\nDo you want to add default songs to your play list?\n[Y/N]: ";
@@ -35,17 +35,10 @@ void IO::initialize_app() noexcept
 				 l_buffer != 'y' && l_buffer != 'n');
 
 		std::ofstream l_file_creator;
-		IO::write_file(l_file_creator, "my_music_play_list.playlist", FE::utility::singleton<music_play_list>::singleton_instance()._song_list);
+		FE::ofstream_guard l_ofstream_guard(l_file_creator, "my_music_play_list.playlist");
+		l_ofstream_guard.write_a_file(FE::utility::singleton<music_play_list>::singleton_instance()._song_list);
 		return;
 	}
 
-	FE::fstring<_FSTRING_LENGTH_> l_string_buffer;
-	while (l_play_list_reader)
-	{
-		l_play_list_reader.getline(l_string_buffer.begin(), l_string_buffer.capacity());
-		if (l_string_buffer[0] != ' ')
-		{
-			FE::utility::singleton<music_play_list>::singleton_instance()._song_list.emplace_back(l_string_buffer);
-		}
-	}
+	l_play_list_reader_guard.read_a_file<std::vector<FE::fstring<_FSTRING_LENGTH_>>, _FSTRING_LENGTH_>( FE::utility::singleton<music_play_list>::singleton_instance()._song_list );
 }

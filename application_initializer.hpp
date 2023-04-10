@@ -2,7 +2,7 @@
 #define _APPLICATION_INITIALIZER_HPP_
 
 
-namespace IO
+namespace io
 {
 	void initialize_app() noexcept;
 }

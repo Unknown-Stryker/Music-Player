@@ -3,7 +3,7 @@
 #include <fstream>
 
 
-namespace IO
+namespace io
 {
 	template<class fstream>
 	class fstream_guard
@@ -47,7 +47,7 @@ namespace IO
 	template<typename char_type, class container>
 	void write_file(std::basic_ofstream<char_type, std::char_traits<char_type>>& file_writter_p, const char_type* filename_ptr_p, container& container_p) noexcept
 	{
-		IO::fstream_guard<std::ofstream> l_file_writter_guard(file_writter_p, filename_ptr_p);
+		io::fstream_guard<std::ofstream> l_file_writter_guard(file_writter_p, filename_ptr_p);
 		for (auto& ref : container_p)
 		{
 			if (ref[0] != static_cast<char_type>('\0'))

@@ -1,2 +1,1 @@
-﻿app_main_framework.cpp(77,4): warning : format specifies type 'int' but the argument has type 'FE::var::uint64' (aka 'unsigned long long') [-Wformat]
-  Music-Player.vcxproj -> C:\Users\leeho\OneDrive\문서\VS_C++_2022\Music-Player\x64\Debug\Music-Player.exe
+﻿  Music-Player.vcxproj -> C:\Users\leeho\OneDrive\문서\VS_C++_2022\Music-Player\x64\Debug\Music-Player.exe

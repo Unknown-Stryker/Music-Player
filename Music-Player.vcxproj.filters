@@ -37,9 +37,6 @@
     <ClInclude Include="application_initializer.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="fstream_guard.hxx">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="app_main_framework.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>

@@ -1,9 +1,9 @@
 #define _EXIT_  4
 #include "app_main_framework.hpp"
-#include "fstream_guard.hxx"
 #include <cstring>
 #include <iostream>
-#include <source/include/public/FE.utility.singleton.hxx>
+#include <Frogman-API-Lab/source/include/public/FE.utility.singleton.hxx>
+#include <Frogman-API-Lab/source/include/public/FE.utility.fstream_guard.hxx>
 
 
 bool amf::g_is_main_loop_active = true;
@@ -35,7 +35,7 @@ int amf::get_message() noexcept
 }
 
 
-void amf::playing_action::take_action() noexcept
+void amf::playing_action::execute() noexcept
 {
 	system("cls");
 	std::cout << "Playing music..." << std::endl;
@@ -44,10 +44,10 @@ void amf::playing_action::take_action() noexcept
 	system("cls");
 }
 
-void amf::adding_action::take_action() noexcept
+void amf::adding_action::execute() noexcept
 {
 	FE::fstring<_FSTRING_LENGTH_> l_input_buffer; 
-
+	
 	do
 	{
 		system("cls");
@@ -62,7 +62,7 @@ void amf::adding_action::take_action() noexcept
 	FE::fstring<_FSTRING_LENGTH_> l_final_string_buffer;
 
 
-	FE::var::uint64 l_song_index = 1;
+	int l_song_index = 1;
 	for (FE::fstring<_FSTRING_LENGTH_>& ref : FE::utility::singleton<music_play_list>::singleton_instance()._song_list)
 	{
 		if (ref[0] != '\0')
@@ -92,28 +92,32 @@ void amf::adding_action::take_action() noexcept
 
 
 	std::ofstream l_file_writter;
-	IO::write_file(l_file_writter, "my_music_play_list.playlist", FE::utility::singleton<music_play_list>::singleton_instance()._song_list );
+	FE::ofstream_guard l_ofstream_guard(l_file_writter, "my_music_play_list.playlist");
+	l_ofstream_guard.write_a_file(FE::utility::singleton<music_play_list>::singleton_instance()._song_list);
 }
 
-void amf::deleting_action::take_action() noexcept
+void amf::deleting_action::execute() noexcept
 {
-	char l_input_buffer = '\0';
+	FE::fstring<_FSTRING_LENGTH_>::char_t l_input_buffer[_FSTRING_LENGTH_] = "\0";
+	FE::var::index_t l_input_index = FE::algorithm::string::ascii_number_to_integer<FE::fstring<_FSTRING_LENGTH_>::char_t, FE::var::size_t>(l_input_buffer);
+	
 	do
 	{
 		system("cls");
-		l_input_buffer = '\0';
+		FE::memory::memset_s(l_input_buffer, 0, _FSTRING_LENGTH_, sizeof(FE::fstring<_FSTRING_LENGTH_>::char_t));
 
 		std::cout << " \"3. Remove a song from the play list\" has been selected."
 			<< "Input the code of the song that you want to delete from the play list: ";
 		std::cin >> l_input_buffer;
+		l_input_index = FE::algorithm::string::ascii_number_to_integer<FE::fstring<_FSTRING_LENGTH_>::char_t, FE::var::size_t>(l_input_buffer);
 		std::cin.ignore();
-	} while (FE::algorithm::string::char_to_int<char, FE::var::uint64>(l_input_buffer) > FE::utility::singleton<music_play_list>::singleton_instance()._song_list.size());
-
+	} while (l_input_index > FE::utility::singleton<music_play_list>::singleton_instance()._song_list.size());
+	
 
 	auto l_new_begin = FE::utility::singleton<music_play_list>::singleton_instance()._song_list.begin();
 	auto l_end = FE::utility::singleton<music_play_list>::singleton_instance()._song_list.end();
 
-	if ((*l_new_begin)[0] == '\0') 
+	if (l_new_begin[l_input_index-1][0] == static_cast<FE::fstring<_FSTRING_LENGTH_>::char_t>('\0'))
 	{
 		system("cls");
 		std::cout << "The list is empty" << std::endl;
@@ -122,26 +126,29 @@ void amf::deleting_action::take_action() noexcept
 
 	for (; l_new_begin < l_end; ++l_new_begin)
 	{
-		if ((*l_new_begin)[0] == l_input_buffer)
+		if (FE::algorithm::string::ascii_number_to_integer<FE::fstring<_FSTRING_LENGTH_>::char_t, FE::var::size_t>((*l_new_begin).begin()) == l_input_index)
 		{
 			FE::memory::memset_s((*l_new_begin).begin(), 0, _FSTRING_LENGTH_, sizeof(FE::fstring<_FSTRING_LENGTH_>::char_t));
 		}
-		else if ((*l_new_begin)[0] != ' ' && (*l_new_begin)[0] > l_input_buffer)
+		else if ((*l_new_begin)[0] != ' ' && FE::algorithm::string::ascii_number_to_integer<FE::fstring<_FSTRING_LENGTH_>::char_t, FE::var::size_t>((*l_new_begin).begin()) > l_input_index)
 		{
 			--(*l_new_begin)[0];
 		}
 	}
 
+
 	std::ofstream l_file_writter;
-	IO::write_file(l_file_writter, "my_music_play_list.playlist", FE::utility::singleton<music_play_list>::singleton_instance()._song_list);
+	FE::ofstream_guard l_ofstream_guard(l_file_writter, "my_music_play_list.playlist");
+	l_ofstream_guard.write_a_file(FE::utility::singleton<music_play_list>::singleton_instance()._song_list);
 }
 
-void amf::exit_action::take_action() noexcept
+void amf::exit_action::execute() noexcept
 {
 	g_is_main_loop_active = false;
 	std::cout << std::endl << "Terminating the application process. Thanks!" << std::endl;
 }
 
+void amf::idle_action::execute() noexcept {};
 
 
 amf::action_base* amf::interpret_input_code(const int input_p) noexcept
@@ -170,8 +177,4 @@ amf::action_base* amf::interpret_input_code(const int input_p) noexcept
 		return &l_s_idle_action;
 		break;
 	}
-}
-
-void amf::idle_action::take_action() noexcept
-{
 }
