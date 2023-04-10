@@ -1,5 +1,5 @@
 #include "application_initializer.hpp"
-#include "file_io_guard.hxx"
+#include "fstream_guard.hxx"
 #include "music_play_list.hpp"
 #include <source/private/runtime_exception.cpp>
 #include <source/private/parallel.mutex.cpp>
@@ -12,7 +12,7 @@
 void IO::initialize_app() noexcept
 {
 	std::ifstream l_play_list_reader;
-	IO::file_io_guard<std::ifstream> l_play_list_reader_guard(l_play_list_reader, "my_music_play_list.playlist");
+	IO::fstream_guard<std::ifstream> l_play_list_reader_guard(l_play_list_reader, "my_music_play_list.playlist");
 
 	if (l_play_list_reader_guard.is_open() == false)
 	{
