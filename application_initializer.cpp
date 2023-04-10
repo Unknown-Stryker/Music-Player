@@ -35,11 +35,7 @@ void IO::initialize_app() noexcept
 				 l_buffer != 'y' && l_buffer != 'n');
 
 		std::ofstream l_file_creator;
-		IO::file_io_guard<std::ofstream> l_file_creator_guard(l_file_creator, "my_music_play_list.playlist");
-		for (FE::fstring<_FSTRING_LENGTH_>& ref : FE::utility::singleton<music_play_list>::singleton_instance()._song_list)
-		{
-			l_file_creator << ref.c_str() << std::endl;
-		}
+		IO::write_file(l_file_creator, "my_music_play_list.playlist", FE::utility::singleton<music_play_list>::singleton_instance()._song_list);
 		return;
 	}
 

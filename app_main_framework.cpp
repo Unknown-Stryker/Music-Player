@@ -92,15 +92,7 @@ void amf::adding_action::take_action() noexcept
 
 
 	std::ofstream l_file_writter;
-	IO::file_io_guard<std::ofstream> l_file_writter_guard(l_file_writter, "my_music_play_list.playlist");
-	
-	for (FE::fstring<_FSTRING_LENGTH_>& ref : FE::utility::singleton<music_play_list>::singleton_instance()._song_list)
-	{
-		if (ref[0] != '\0')
-		{
-			l_file_writter << ref.c_str() << std::endl;
-		}
-	}
+	IO::write_file(l_file_writter, "my_music_play_list.playlist", FE::utility::singleton<music_play_list>::singleton_instance()._song_list );
 }
 
 void amf::deleting_action::take_action() noexcept
@@ -140,17 +132,8 @@ void amf::deleting_action::take_action() noexcept
 		}
 	}
 
-
 	std::ofstream l_file_writter;
-	IO::file_io_guard<std::ofstream> l_file_writter_guard(l_file_writter, "my_music_play_list.playlist");
-	
-	for (FE::fstring<_FSTRING_LENGTH_>& ref : FE::utility::singleton<music_play_list>::singleton_instance()._song_list)
-	{
-		if (ref[0] != '\0')
-		{
-			l_file_writter << ref.c_str() << std::endl;
-		}
-	}
+	IO::write_file(l_file_writter, "my_music_play_list.playlist", FE::utility::singleton<music_play_list>::singleton_instance()._song_list);
 }
 
 void amf::exit_action::take_action() noexcept

@@ -1,5 +1,6 @@
 #ifndef _FILE_IO_GUARD_HXX_
 #define _FILE_IO_GUARD_HXX_
+#include <fstream>
 
 
 namespace IO
@@ -41,6 +42,20 @@ namespace IO
 			return this->m_file_io_ref.is_open();
 		}
 	};
+
+
+	template<typename char_type, class container>
+	void write_file(std::basic_ofstream<char_type, std::char_traits<char_type>>& file_writter_p, const char_type* filename_ptr_p, container& container_p) noexcept
+	{
+		IO::file_io_guard<std::ofstream> l_file_writter_guard(file_writter_p, filename_ptr_p);
+		for (auto& ref : container_p)
+		{
+			if (ref[0] != static_cast<char_type>('\0'))
+			{
+				file_writter_p << ref.c_str() << std::endl;
+			}
+		}
+	}
 }
 
 #endif // !_FILE_IO_GUARD_HXX_
