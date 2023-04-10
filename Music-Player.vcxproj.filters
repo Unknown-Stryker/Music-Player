@@ -40,10 +40,10 @@
     <ClInclude Include="file_io_guard.hxx">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="music_play_list.hpp">
+    <ClInclude Include="app_main_framework.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="app_main_framework.hpp">
+    <ClInclude Include="music_play_list.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

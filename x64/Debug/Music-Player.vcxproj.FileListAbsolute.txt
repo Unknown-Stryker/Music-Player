@@ -1,1 +1,2 @@
 C:\Users\leeho\OneDrive\문서\VS C++ 2022\Music-Player\x64\Debug\Music-Player.exe
+C:\Users\leeho\OneDrive\문서\VS_C++_2022\Music-Player\x64\Debug\Music-Player.exe
